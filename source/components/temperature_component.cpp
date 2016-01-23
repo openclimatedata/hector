@@ -111,6 +111,9 @@ void TemperatureComponent::setData( const string& varName,
         if( varName == D_ECS ) {
             H_ASSERT( data.date == Core::undefinedIndex() , "date not allowed" );
             S = unitval::parse_unitval( data.value_str, data.units_str, U_DEGC );
+        } else if( varName == "S2005" ) {   // ocean acidification MC
+            H_ASSERT( data.date == Core::undefinedIndex() , "date not allowed" );
+            S2005 = unitval::parse_unitval( data.value_str, data.units_str, U_DEGC );
         } else if( varName == D_TGAV_CONSTRAIN ) {
             H_ASSERT( data.date != Core::undefinedIndex(), "date required" );
             tgav_constrain.set( data.date, unitval::parse_unitval( data.value_str, data.units_str, U_DEGC ) );
@@ -140,6 +143,10 @@ void TemperatureComponent::setData( const string& varName,
 void TemperatureComponent::prepareToRun() throw ( h_exception ) {
     
     H_LOG( logger, Logger::DEBUG ) << "prepareToRun " << std::endl;
+    
+    if(S2005.units() == U_UNDEFINED) {  // ocean acidification MC
+        S2005 = S;
+    }
     
     if( tgav_constrain.size() ) {
         Logger& glog = Logger::getGlobalLogger();
@@ -221,9 +228,15 @@ void TemperatureComponent::run( const double runToDate ) throw ( h_exception ) {
             // S is the equilibrium climate sensitivity for a doubling of CO2
             // this corresponds, according to Knutti and Hegerl (2008), to ~3.7 W/m2
             // Use this to compute a temperature resulting from total forcing
-            tgaveq = S / 3.7 * internal_Ftot;
-            const double heatflux = core->sendMessage( M_GETDATA, D_HEAT_FLUX ).value( U_W_M2 );
-            tgav = S / 3.7 * ( internal_Ftot - heatflux );
+            if(runToDate >= 2005) {   // ocean acidification MC
+                tgaveq = S2005 / 3.7 * internal_Ftot;
+                const double heatflux = core->sendMessage( M_GETDATA, D_HEAT_FLUX ).value( U_W_M2 );
+                tgav = S2005 / 3.7 * ( internal_Ftot - heatflux );
+            } else {
+                tgaveq = S / 3.7 * internal_Ftot;
+                const double heatflux = core->sendMessage( M_GETDATA, D_HEAT_FLUX ).value( U_W_M2 );
+                tgav = S / 3.7 * ( internal_Ftot - heatflux );
+            }
         }
         
         H_LOG( logger, Logger::DEBUG ) << " internal_Ftot=" << internal_Ftot << " tgav=" << tgav << " in " << runToDate << std::endl;

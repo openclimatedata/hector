@@ -71,7 +71,7 @@ private:
     unitval tgaveq;     // equilibrium temperature without ocean heat flux
 	unitval tgav;       //!< global temperature delta, deg C
 	unitval S;          //!< climate sensitivity for 2xCO2, deg C
-    
+    unitval S2005;          //!< climate sensitivity for 2xCO2, deg C, starting 2005 - ocean acidification MC
     unitval bc_b;
     unitval oc_b;
     unitval so2i_b;
