@@ -53,6 +53,9 @@ private:
     
     //! Flag to indicate that this logger has been successfully opened.
     bool isInitialized;
+
+    bool echoToFile;
+    bool enabled;
     
     //! The actual output stream which will handle the logging.
     std::ostream loggerStream;
@@ -93,7 +96,7 @@ public:
     ~Logger();
     
     void open( const std::string& logName, const bool echoToScreen,
-              LogLevel minLogLevel) throw ( h_exception );
+              LogLevel minLogLevel, const bool echoToFile = false) throw ( h_exception );
     
     bool shouldWrite( const LogLevel writeLevel ) const;
     
