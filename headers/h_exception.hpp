@@ -40,6 +40,7 @@ class h_exception : public std::exception {
                 const std::string& file_p, const int linenum_p)
             : msg(msg_p), func(func_p), file(file_p), linenum(linenum_p) {
     }
+    virtual ~h_exception() throw() {}
     inline const std::string get_filename() const {
         return extractFilename(file);
     }
@@ -54,8 +55,7 @@ class h_exception : public std::exception {
 /*! \brief Insertion operator for h_exception objects
  *
  */
-inline std::ostream & operator<<( std::ostream &os, const h_exception &he )
-{
+inline std::ostream & operator<<( std::ostream &os, const h_exception &he ) {
     os << "msg:  \t" << he.msg << "\nfunc: \t" << he.func
        << "\nfile: \t" << he.get_filename() << "\nffile:\t" << he.file << "\n"
        << "\nline: \t" << he.linenum << "\n";
