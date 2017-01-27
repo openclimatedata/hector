@@ -23,6 +23,9 @@ ifeq ($(strip $(BOOSTLIB)),)
 ## Default is the location used by the build scripts included with Boost, but
 ## this can be overridden by setting BOOSTROOT explicitly in the enviornment.
 BOOSTLIB = $(BOOSTROOT)/stage/lib
+ifeq ($(wildcard $(BOOSTLIB)),)
+BOOSTLIB = . # ignore boost environment variables if paths do not exist, so try if boost paths are in system paths already, anyway
+endif
 endif
 
 ## Gtest root

@@ -66,3 +66,7 @@ R/batchrunner/*.pdf
 R/batchrunner/*.csv
 .Rapp.history
 
+GPATH
+GRTAGS
+GSYMS
+GTAGS
