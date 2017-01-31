@@ -134,6 +134,6 @@ public:
  * \param level The logging priority to log at.
  */
 #define H_LOG(log, level)  \
-if( log.shouldWrite( level ) ) log.write( level, __func__ )
+    if( false ) log.write( level, __func__ )
 
 #endif
